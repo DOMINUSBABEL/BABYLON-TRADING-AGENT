@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BABYLON - Trading Agent</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-circle">Ξ</div>
+                <h2>BABYLON.IA</h2>
+            </div>
+            <p class="tagline">TRADING AGENT</p>
+            <nav class="menu">
+                <a href="#" class="menu-item active" data-tab="tab-positions">
+                    <span class="icon">📈</span> Futuros Abiertos
+                </a>
+                <a href="#" class="menu-item" data-tab="tab-risk">
+                    <span class="icon">🛡️</span> Configuración Riesgo
+                </a>
+                <a href="#" class="menu-item" data-tab="tab-telemetry">
+                    <span class="icon">🧠</span> Logs de Dialéctica
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="status-badge">
+                    <span class="pulse-dot"></span>
+                    <span>Binance Sandbox Connected</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-info">
+                    <h1>Optimizador de Futuros Cripto</h1>
+                    <p>Balanceando apalancamiento mediante Criterio de Kelly sin fuga de llaves API.</p>
+                </div>
+                <div class="env-stats">
+                    <div class="stat-bubble">
+                        <span class="label">Riesgo</span>
+                        <span class="value success">Kelly Opt.</span>
+                    </div>
+                    <div class="stat-bubble">
+                        <span class="label">Futuros Max</span>
+                        <span class="value error-text">10x Cap</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Tab Positions -->
+            <section id="tab-positions" class="tab-pane active">
+                <div class="grid-layout">
+                    <!-- Positions Table -->
+                    <div class="card glass-card span-8">
+                        <h3>Posiciones Abiertas</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Activo</th>
+                                    <th>Dirección</th>
+                                    <th>Apal.</th>
+                                    <th>Precio Entrada</th>
+                                    <th>Precio Marca</th>
+                                    <th>Liq. Price</th>
+                                    <th>PnL (USD)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="positions-body">
+                                <tr>
+                                    <td colspan="7" class="muted-text text-center">Cargando posiciones...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Risk metrics -->
+                    <div class="card glass-card span-4 flex-col justify-between">
+                        <h3>Métricas de Cuenta</h3>
+                        <div class="kpi-block">
+                            <span class="kpi-label">Margen Total Disponible</span>
+                            <span class="kpi-value text-accent">$8,450.00 USD</span>
+                        </div>
+                        <div class="kpi-block">
+                            <span class="kpi-label">Uso de Margen %</span>
+                            <span class="kpi-value success-text">35%</span>
+                        </div>
+                        <div class="kpi-block border-top">
+                            <span class="kpi-label">Drawdown Histórico Máximo</span>
+                            <span class="kpi-value error-text">-4.2%</span>
+                        </div>
+                    </div>
+
+                    <!-- Chart -->
+                    <div class="card glass-card span-12">
+                        <h3>Visualización de Exposición por Activo</h3>
+                        <div class="chart-container" style="position: relative; height:220px; width:100%">
+                            <canvas id="tradingChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab Risk -->
+            <section id="tab-risk" class="tab-pane">
+                <div class="grid-layout">
+                    <!-- Form Risk Config -->
+                    <div class="card glass-card span-7">
+                        <h3>Ajustar Parámetros de Apalancamiento</h3>
+                        <form id="risk-form">
+                            <div class="form-group">
+                                <label for="range-leverage">Apalancamiento Máximo Admitido (1x - 20x)</label>
+                                <div class="slider-container">
+                                    <input type="range" id="range-leverage" min="1" max="20" value="10">
+                                    <span class="slider-val" id="val-leverage">10x</span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="kelly-fraction">Criterio Kelly Fraccional</label>
+                                    <input type="number" id="kelly-fraction" min="0.1" max="1" step="0.1" value="0.5">
+                                </div>
+                                <div class="form-group">
+                                    <label for="max-drawdown-stop">Stop de Emergencia Drawdown (%)</label>
+                                    <input type="number" id="max-drawdown-stop" min="1" max="50" value="10">
+                                </div>
+                            </div>
+                            <button type="button" class="btn-primary" id="btn-save-risk">Reconfigurar Límites de Operación</button>
+                        </form>
+                    </div>
+
+                    <!-- Interactive Kelly Estimator -->
+                    <div class="card glass-card span-5">
+                        <h3>Simulador Kelly Local</h3>
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label for="win-rate">Tasa de Acierto Estimada (Win Rate %)</label>
+                            <input type="number" id="win-rate" min="10" max="95" value="55">
+                        </div>
+                        <div class="form-group">
+                            <label for="profit-ratio">Relación Ganancia/Pérdida (Risk/Reward Ratio)</label>
+                            <input type="number" id="profit-ratio" min="0.5" max="10" step="0.1" value="2.0">
+                        </div>
+                        <div class="result-row border-top" style="margin-top: 15px;">
+                            <span>Fracción Óptima Sugerida:</span>
+                            <strong class="success-text" id="kelly-sug-fraction">32.5%</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab Telemetry -->
+            <section id="tab-telemetry" class="tab-pane">
+                <div class="grid-layout">
+                    <div class="card glass-card span-12">
+                        <h3>Registro de Dialéctica Trading</h3>
+                        <div class="terminal-window">
+                            <div class="terminal-header">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                                <span class="terminal-title">geist_futures_trading.log</span>
+                            </div>
+                            <div class="terminal-body" id="telemetry-logs">
+                                <div class="log-line"><span class="log-time">[01:42:01]</span> <span class="log-info">SYSTEM:</span> Inicializando Geist Trading Agent Central...</div>
+                                <div class="log-line"><span class="log-time">[01:42:03]</span> <span class="log-info">TESIS:</span> Oportunidad de entrada en Long BTCUSDT identificada mediante cruce alcista MACD.</div>
+                                <div class="log-line"><span class="log-time">[01:42:04]</span> <span class="log-warn">ANTÍTESIS:</span> Volatilidad local indica riesgo de mechazo bajista de 4% hacia zona de liquidación si se usa 10x.</div>
+                                <div class="log-line"><span class="log-time">[01:42:06]</span> <span class="log-success">SÍNTESIS:</span> Reducir apalancamiento a 5x y fijar stop loss garantizado a 5.5% bajo precio de entrada. Orden despachada.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
