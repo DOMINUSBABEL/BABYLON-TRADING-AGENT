@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "binance-futures": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-binance-futures"],
+      "env": {
+        "BINANCE_Sandbox": "true"
+      }
+    }
+  }
+}

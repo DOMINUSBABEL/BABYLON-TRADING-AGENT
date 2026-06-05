@@ -1,0 +1,4 @@
+[
+  { "symbol": "BTCUSDT", "side": "LONG", "profit": 200 },
+  { "symbol": "ETHUSDT", "side": "SHORT", "profit": -50 }
+]
