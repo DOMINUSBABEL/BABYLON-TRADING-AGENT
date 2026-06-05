@@ -4,7 +4,9 @@
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-binance-futures"],
       "env": {
-        "BINANCE_Sandbox": "true"
+        "BINANCE_Sandbox": "true",
+        "BINANCE_MaxLeverageLimit": "10",
+        "BINANCE_DrawdownEmergencyStopPct": "12.5"
       }
     }
   }
