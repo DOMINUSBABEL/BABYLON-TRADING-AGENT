@@ -17,3 +17,5 @@ CREATE TABLE IF NOT EXISTS risk_settings (
     max_drawdown_stop REAL DEFAULT 10.0,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE INDEX IF NOT EXISTS idx_trades_symbol ON trade_logs(symbol);
+CREATE INDEX IF NOT EXISTS idx_trades_status ON trade_logs(status);
